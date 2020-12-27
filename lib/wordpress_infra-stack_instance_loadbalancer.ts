@@ -16,7 +16,8 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
       internetFacing: true,
       vpcSubnets: {
         availabilityZones: ['eu-west-2a', 'eu-west-2b'],
-        onePerAz: true
+        onePerAz: true,
+        subnetType: ec2.SubnetType.PUBLIC
       }
     });
 

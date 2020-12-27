@@ -8,7 +8,7 @@ export class WordpressInfraStack extends cdk.Stack {
 
     // The code that defines your stack goes here
     this.vpc = new ec2.Vpc(this, 'Wordpress VPC', {
-      maxAzs: 1,
+      maxAzs: 2,
       natGateways: 1,
       subnetConfiguration: [{
         cidrMask: 28,
@@ -18,7 +18,7 @@ export class WordpressInfraStack extends cdk.Stack {
       {
         cidrMask: 28,
         name: 'Auto Scaling Group',
-        subnetType: ec2.SubnetType.PRIVATE
+        subnetType: ec2.SubnetType.PRIVATE,
       },
       {
         cidrMask: 28,
