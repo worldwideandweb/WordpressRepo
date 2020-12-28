@@ -62,7 +62,6 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
     });
 
     this.asg.userData.addCommands(
-      "sudo ufw disable",
       "apt-get -y update",
       "apt-get -y upgrade",                                 // Ubuntu: apt-get -y upgrade
       "apt-get -y install amazon-efs-utils",                // Ubuntu: apt-get -y install amazon-efs-utils
@@ -75,7 +74,6 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
       "mount -a -t efs,nfs4 defaults");
 
     this.instance.userData.addCommands(
-      "sudo ufw disable",
       "apt-get -y update",
       "apt-get -y upgrade",                                 // Ubuntu: apt-get -y upgrade
       "apt-get -y install amazon-efs-utils",                // Ubuntu: apt-get -y install amazon-efs-utils
