@@ -32,15 +32,21 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
       }),
       vpc,
       vpcSubnets: {
-        subnetType: ec2.SubnetType.PRIVATE
+        subnetType: ec2.SubnetType.PUBLIC
       },
-      keyName: 'Wordpress Connection',
+      keyName: 'Wordpress Connection'
     });
 
 
     listener.addTargets('Listener target', {
       port: 8080,
-      targets: [this.asg]
+      targets: [this.asg],
+      healthCheck: {
+        path: '/',
+        interval: cdk.Duration.minutes(1),
+        healthyThresholdCount: 2,
+        unhealthyThresholdCount: 10
+      }
     });
 
     this.instance = new ec2.Instance(this, 'Instance', {
@@ -56,26 +62,26 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
     });
 
     this.asg.userData.addCommands(
-      "sudo ufw disable",  
-      "apt-get -y update",    
+      "sudo ufw disable",
+      "apt-get -y update",
       "apt-get -y upgrade",                                 // Ubuntu: apt-get -y upgrade
       "apt-get -y install amazon-efs-utils",                // Ubuntu: apt-get -y install amazon-efs-utils
       "apt-get -y install nfs-common",                       // Ubuntu: apt-get -y install nfs-common
-      "file_system_id_1="+ fileSystem.fileSystemId,
+      "file_system_id_1=" + fileSystem.fileSystemId,
       "efs_mount_point_1=/mnt/efs/fs1",
       "mkdir -p \"${efs_mount_point_1}\"",
       "test -f \"/sbin/mount.efs\" && echo \"${file_system_id_1}:/ ${efs_mount_point_1} efs defaults,_netdev\" >> /etc/fstab || " +
       "echo \"${file_system_id_1}.efs.eu-west-2.amazonaws.com:/ ${efs_mount_point_1} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport,_netdev 0 0\" >> /etc/fstab",
       "mount -a -t efs,nfs4 defaults");
-  
+
     this.instance.userData.addCommands(
-      "sudo ufw disable",  
-      "apt-get -y update",    
+      "sudo ufw disable",
+      "apt-get -y update",
       "apt-get -y upgrade",                                 // Ubuntu: apt-get -y upgrade
       "apt-get -y install amazon-efs-utils",                // Ubuntu: apt-get -y install amazon-efs-utils
       "apt-get -y install nfs-common",                       // Ubuntu: apt-get -y install nfs-common
-      "file_system_id_1="+ fileSystem.fileSystemId,
-      "efs_mount_point_1=/mnt/efs/fs1",
+      "file_system_id_1=" + fileSystem.fileSystemId,
+      "efs_mount_point_1=/something",
       "mkdir -p \"${efs_mount_point_1}\"",
       "test -f \"/sbin/mount.efs\" && echo \"${file_system_id_1}:/ ${efs_mount_point_1} efs defaults,_netdev\" >> /etc/fstab || " +
       "echo \"${file_system_id_1}.efs.eu-west-2.amazonaws.com:/ ${efs_mount_point_1} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport,_netdev 0 0\" >> /etc/fstab",

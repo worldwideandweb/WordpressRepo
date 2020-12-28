@@ -12,10 +12,12 @@ export class WordpressInfraStackFileSystem extends cdk.Stack {
     // The code that defines your stack goes here
     this.fileSystem = new efs.FileSystem(this, 'MyEfsFileSystem', {
       vpc,
-      encrypted: true,
+      encrypted: false,
       lifecyclePolicy: efs.LifecyclePolicy.AFTER_14_DAYS,
       performanceMode: efs.PerformanceMode.GENERAL_PURPOSE,
       removalPolicy: RemovalPolicy.DESTROY
     });
+
+    this.fileSystem.addAccessPoint('AccessPoint');
   }
 }
