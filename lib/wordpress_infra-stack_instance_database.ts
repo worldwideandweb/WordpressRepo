@@ -11,7 +11,6 @@ export class WordpressInfraStackDatabase extends cdk.Stack {
       vpc
     });
 
-    securityGroup.connections.allowFrom(instance, ec2.Port.tcp(3306), 'Inbound');
     securityGroup.connections.allowFrom(asg, ec2.Port.tcp(3306), 'Inbound');
 
     // The code that defines your stack goes here

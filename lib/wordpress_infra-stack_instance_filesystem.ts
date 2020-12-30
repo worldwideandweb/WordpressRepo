@@ -17,7 +17,5 @@ export class WordpressInfraStackFileSystem extends cdk.Stack {
       performanceMode: efs.PerformanceMode.GENERAL_PURPOSE,
       removalPolicy: RemovalPolicy.DESTROY,
     });
-
-    this.fileSystem.addAccessPoint('AccessPoint');
   }
 }
