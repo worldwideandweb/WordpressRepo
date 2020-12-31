@@ -35,7 +35,7 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
       }),
       vpc,
       vpcSubnets: {
-        subnetType: ec2.SubnetType.PUBLIC
+        subnetType: ec2.SubnetType.PRIVATE
       },
       keyName: 'Wordpress Load Balancer'
     });
