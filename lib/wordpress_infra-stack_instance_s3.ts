@@ -6,7 +6,7 @@ export class WordpressInfraStackS3 extends cdk.Stack {
     super(scope, id, props);
 
     const bucket = new s3.Bucket(this, 'WordpressInfraBucket', {
-      bucketName: 'wordpress-infra-stack',
+      bucketName: 'www-wordpress-infra-stack-sahamidiamonds',
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
   }

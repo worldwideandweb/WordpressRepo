@@ -22,19 +22,20 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
     });
 
     const listener = lb.addListener('Listener 443', {
-      port: 443
+      port: 443,
+      certificates: [elbv2.ListenerCertificate.fromArn('arn:aws:acm:eu-west-2:460234074473:certificate/5576f782-35aa-43ab-8e65-892a90b53d74')]
     });
 
     this.asg = new AutoScalingGroup(this, 'Wordpress Autoscaling Group', {
       instanceType: new ec2.InstanceType('t2.micro'),
       machineImage: ec2.MachineImage.genericLinux({
-        'eu-west-2': 'ami-04d6a4882072a6b3b'
+        'eu-west-2': 'ami-0ff4c8fb495a5a50d'
       }),
       vpc,
       vpcSubnets: {
         subnetType: ec2.SubnetType.PUBLIC
       },
-      keyName: 'Wordpress Connection'
+      keyName: 'Wordpress Load Balancer'
     });
 
     this.asg.connections.allowFrom(ec2.Peer.anyIpv4(), ec2.Port.tcp(22), 'SSH from anywhere');
