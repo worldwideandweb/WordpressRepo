@@ -7,7 +7,7 @@ import * as efs from '@aws-cdk/aws-efs';
 export class WordpressInfraStackLoadBalancer extends cdk.Stack {
   public asg: AutoScalingGroup;
   public instance: ec2.Instance;
-  constructor(scope: cdk.Construct, id: string, fileSystem: efs.FileSystem, vpc: ec2.Vpc, props?: cdk.StackProps) {
+  constructor(scope: cdk.Construct, id: string, vpc: ec2.Vpc, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // The code that defines your stack goes here
@@ -26,10 +26,12 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
       certificates: [elbv2.ListenerCertificate.fromArn('arn:aws:acm:eu-west-2:460234074473:certificate/5576f782-35aa-43ab-8e65-892a90b53d74')]
     });
 
+    const redirect = lb.addRedirect();
+
     this.asg = new AutoScalingGroup(this, 'Wordpress Autoscaling Group', {
       instanceType: new ec2.InstanceType('t2.micro'),
       machineImage: ec2.MachineImage.genericLinux({
-        'eu-west-2': 'ami-0ff4c8fb495a5a50d'
+        'eu-west-2': 'ami-0f6c1e6745ea9532f'
       }),
       vpc,
       vpcSubnets: {
@@ -39,10 +41,11 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
     });
 
     this.asg.connections.allowFrom(ec2.Peer.anyIpv4(), ec2.Port.tcp(22), 'SSH from anywhere');
-    this.asg.connections.allowFrom(lb, ec2.Port.tcp(443), 'Load Balancer Port');
+    this.asg.connections.allowFrom(lb, ec2.Port.tcp(80), 'Load Balancer Port');
+    this.asg.connections.allowFrom(ec2.Peer.anyIpv4(), ec2.Port.allTraffic(), 'Load Balancer Port 2');
 
     listener.addTargets('Listener target', {
-      port: 443,
+      port: 80,
       targets: [this.asg],
       healthCheck: {
         path: '/',
@@ -57,7 +60,7 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
       "apt-get -y upgrade",                                 // Ubuntu: apt-get -y upgrade
       "apt-get -y install amazon-efs-utils",                // Ubuntu: apt-get -y install amazon-efs-utils
       "apt-get -y install nfs-common",                       // Ubuntu: apt-get -y install nfs-common
-      "file_system_id_1=fs-dc547b2d",
+      "file_system_id_1=fs-a9d5fa58",
       "efs_mount_point_1=/mnt/efs/fs1",
       "mkdir -p \"${efs_mount_point_1}\"",
       "test -f \"/sbin/mount.efs\" && echo \"${file_system_id_1}:/ ${efs_mount_point_1} efs defaults,_netdev\" >> /etc/fstab || " +

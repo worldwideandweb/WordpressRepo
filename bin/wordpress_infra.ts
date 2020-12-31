@@ -13,8 +13,8 @@ const env = {
 
 const app = new cdk.App();
 
-const vpcStack = new WordpressInfraStack(app, 'WordpressInfraStack', {env});
-const fileSystemStack = new WordpressInfraStackFileSystem(app, 'WordpressInfraStackFileSystem', vpcStack.vpc, {env});
-const asgStack = new WordpressInfraStackLoadBalancer(app, 'WordpressInfraStackLoadBalancer', fileSystemStack.fileSystem, vpcStack.vpc,{env});
-new WordpressInfraStackDatabase(app, 'WordpressInfraStackDatabase', vpcStack.vpc, asgStack.asg, asgStack.instance, {env});
-new WordpressInfraStackS3(app, 'WordpressInfraStackS3', {env});
+const vpcStack = new WordpressInfraStack(app, 'WordpressInfraStack', { env });
+new WordpressInfraStackFileSystem(app, 'WordpressInfraStackFileSystem', vpcStack.vpc, { env });
+const asgStack = new WordpressInfraStackLoadBalancer(app, 'WordpressInfraStackLoadBalancer', vpcStack.vpc, { env });
+new WordpressInfraStackDatabase(app, 'WordpressInfraStackDatabase', vpcStack.vpc, asgStack.asg, asgStack.instance, { env });
+new WordpressInfraStackS3(app, 'WordpressInfraStackS3', { env });
