@@ -2,16 +2,16 @@ import * as cdk from '@aws-cdk/core';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 import { AutoScalingGroup } from '@aws-cdk/aws-autoscaling';
-import * as efs from '@aws-cdk/aws-efs';
 
 export class WordpressInfraStackLoadBalancer extends cdk.Stack {
   public asg: AutoScalingGroup;
+  public lb: elbv2.ApplicationLoadBalancer;
   public instance: ec2.Instance;
   constructor(scope: cdk.Construct, id: string, vpc: ec2.Vpc, props?: cdk.StackProps) {
     super(scope, id, props);
 
     // The code that defines your stack goes here
-    const lb = new elbv2.ApplicationLoadBalancer(this, 'Wordpress Application Load Balancer', {
+    this.lb = new elbv2.ApplicationLoadBalancer(this, 'Wordpress Application Load Balancer', {
       vpc,
       internetFacing: true,
       vpcSubnets: {
@@ -21,12 +21,12 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
       }
     });
 
-    const listener = lb.addListener('Listener 443', {
+    const listener = this.lb.addListener('Listener 443', {
       port: 443,
       certificates: [elbv2.ListenerCertificate.fromArn('arn:aws:acm:eu-west-2:460234074473:certificate/5576f782-35aa-43ab-8e65-892a90b53d74')]
     });
 
-    const redirect = lb.addRedirect();
+    const redirect = this.lb.addRedirect();
 
     this.asg = new AutoScalingGroup(this, 'Wordpress Autoscaling Group', {
       instanceType: new ec2.InstanceType('t2.micro'),
@@ -41,7 +41,7 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
     });
 
     this.asg.connections.allowFrom(ec2.Peer.anyIpv4(), ec2.Port.tcp(22), 'SSH from anywhere');
-    this.asg.connections.allowFrom(lb, ec2.Port.tcp(80), 'Load Balancer Port');
+    this.asg.connections.allowFrom(this.lb, ec2.Port.tcp(80), 'Load Balancer Port');
     this.asg.connections.allowFrom(ec2.Peer.anyIpv4(), ec2.Port.allTraffic(), 'Load Balancer Port 2');
 
     listener.addTargets('Listener target', {
