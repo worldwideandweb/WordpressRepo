@@ -11,9 +11,19 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
         const myCertificate = certificateManager.Certificate.fromCertificateArn
             (this, 'Rebudd Certificate', 'arn:aws:acm:us-east-1:460234074473:certificate/43468197-89a2-4d04-8b1a-336f09bd5c0b');
 
+
+        const defaultBehavior: cloudfront.BehaviorOptions = {
+            origin: new origins.LoadBalancerV2Origin(lb as any, {
+                protocolPolicy: cloudfront.OriginProtocolPolicy.HTTP_ONLY
+            }),
+            allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
+            viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+            cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
+        }
+
         //  Add the load balancer as the origin
         const cf = new cloudfront.Distribution(this, 'Load balancer distribution', {
-            defaultBehavior: { origin: new origins.LoadBalancerV2Origin(lb as any) },
+            defaultBehavior: defaultBehavior,
             domainNames: ['www.rebudd.com', 'rebudd.com'],
             certificate: myCertificate
         });

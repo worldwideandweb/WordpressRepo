@@ -19,4 +19,4 @@ new WordpressInfraStackFileSystem(app, 'WordpressInfraStackFileSystem', vpcStack
 const loadBalancerStack = new WordpressInfraStackLoadBalancer(app, 'WordpressInfraStackLoadBalancer', vpcStack.vpc, { env });
 new WordpressInfraStackDatabase(app, 'WordpressInfraStackDatabase', vpcStack.vpc, loadBalancerStack.asg, loadBalancerStack.instance, { env });
 new WordpressInfraStackS3(app, 'WordpressInfraStackS3', { env });
-new WordpressInfraStackCloudfront(app, 'WordpresInfraStackCloudfront', loadBalancerStack.lb, {env})
+new WordpressInfraStackCloudfront(app, 'WordpressInfraStackCloudfront', loadBalancerStack.lb, {env})

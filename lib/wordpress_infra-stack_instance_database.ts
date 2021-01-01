@@ -16,7 +16,7 @@ export class WordpressInfraStackDatabase extends cdk.Stack {
     // The code that defines your stack goes here
     new rds.DatabaseInstance(this, 'Wordpress MySQL Aurora', {
       engine: rds.DatabaseInstanceEngine.mysql({ version: rds.MysqlEngineVersion.VER_8_0_21 }),
-      instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.SMALL),
+      instanceType: ec2.InstanceType.of(ec2.InstanceClass.BURSTABLE2, ec2.InstanceSize.MICRO),
       vpcSubnets: {
         subnetType: ec2.SubnetType.ISOLATED
       },
