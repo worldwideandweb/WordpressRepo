@@ -21,9 +21,12 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
       }
     });
 
-    const listener = this.lb.addListener('Listener 80', {
-      port: 80,
+    const listener = this.lb.addListener('Listener 443', {
+      port: 443,
+      certificates: [elbv2.ListenerCertificate.fromArn('arn:aws:acm:eu-west-2:460234074473:certificate/5576f782-35aa-43ab-8e65-892a90b53d74')]
     });
+
+    this.lb.addRedirect();
 
     this.asg = new AutoScalingGroup(this, 'Wordpress Autoscaling Group', {
       instanceType: new ec2.InstanceType('t2.micro'),
@@ -43,13 +46,7 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
 
     listener.addTargets('Listener target', {
       port: 80,
-      targets: [this.asg],
-      healthCheck: {
-        path: '/',
-        interval: cdk.Duration.minutes(1),
-        healthyThresholdCount: 2,
-        unhealthyThresholdCount: 10
-      }
+      targets: [this.asg]
     });
 
     this.asg.userData.addCommands(
