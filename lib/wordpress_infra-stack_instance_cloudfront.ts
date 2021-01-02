@@ -16,16 +16,24 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
         const defaultCachePolicy = new cloudfront.CachePolicy(this, 'Default Cache Policy', {
             cachePolicyName: 'loadBalancer',
             comment: 'Cache policy for the load balancer (efs)',
-            headerBehavior: cloudfront.CacheHeaderBehavior.allowList('Host', 'Origin'),
+            headerBehavior: cloudfront.CacheHeaderBehavior.allowList('Host', 'Origin', 'Access-Control-Request-Headers', 'Access-Control-Request-Method', 'Authorization', 'CloudFront-Forwarded-Proto'),
             cookieBehavior: cloudfront.CacheCookieBehavior.allowList('comment_author_*', 'comment_author_email_*', 'comment_author_url_*', 'wordpress_*', 'wordpress_logged_in_*', 'wordpress_test_cookie', 'wp-settings-*'),
             queryStringBehavior: cloudfront.CacheQueryStringBehavior.all()
         });
 
         const s3Policy = new cloudfront.CachePolicy(this, 'S3 Cache policy', {
             cachePolicyName: 's3',
-            headerBehavior: cloudfront.CacheHeaderBehavior.allowList('Origin', 'Access-Control-Request-Headers', 'Access-Control-Request-Method'),
+            headerBehavior: cloudfront.CacheHeaderBehavior.allowList('Origin', 'Access-Control-Request-Headers', 'Access-Control-Request-Method', 'Authorization', 'CloudFront-Forwarded-Proto'),
             cookieBehavior: cloudfront.CacheCookieBehavior.none(),
             queryStringBehavior: cloudfront.CacheQueryStringBehavior.none()
+        });
+
+        const allCachePolicy = new cloudfront.CachePolicy(this, 'All Cache Policy', {
+            cachePolicyName: 'wpJson',
+            comment: 'Cache policy for the load balancer (efs)',
+            headerBehavior: cloudfront.CacheHeaderBehavior.allowList('Host', 'Referer', 'Accept-Language', 'User-Agent', 'X-Wp-Nonce', 'Origin', 'Access-Control-Request-Headers', 'Access-Control-Request-Method', 'Authorization', 'CloudFront-Forwarded-Proto'),
+            cookieBehavior: cloudfront.CacheCookieBehavior.all(),
+            queryStringBehavior: cloudfront.CacheQueryStringBehavior.all()
         });
 
         const defaultBehavior: cloudfront.BehaviorOptions = {
@@ -36,6 +44,16 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
             viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
             cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
             cachePolicy: defaultCachePolicy
+        }
+
+        const allBehaviour: cloudfront.BehaviorOptions = {
+            origin: new origins.LoadBalancerV2Origin(lb as any, {
+                protocolPolicy: cloudfront.OriginProtocolPolicy.HTTPS_ONLY
+            }),
+            allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
+            viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
+            cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
+            cachePolicy: allCachePolicy,
         }
 
         const wpincludes: cloudfront.BehaviorOptions = {
@@ -58,7 +76,10 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
             defaultBehavior: defaultBehavior,
             additionalBehaviors: {
                 '/wp-inclues/*': wpincludes,
-                '/wp-content/*': wpContent
+                '/wp-content/*': wpContent,
+                '/wp-login.php': defaultBehavior,
+                '/wp-admin/*': defaultBehavior,
+                '/wp-json/*': allBehaviour,
             },
             domainNames: ['www.rebudd.com', 'rebudd.com'],
             certificate: myCertificate
