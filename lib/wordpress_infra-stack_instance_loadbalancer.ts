@@ -26,12 +26,10 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
       certificates: [elbv2.ListenerCertificate.fromArn('arn:aws:acm:eu-west-2:460234074473:certificate/5576f782-35aa-43ab-8e65-892a90b53d74')]
     });
 
-    this.lb.addRedirect();
-
     this.asg = new AutoScalingGroup(this, 'Wordpress Autoscaling Group', {
       instanceType: new ec2.InstanceType('t2.micro'),
       machineImage: ec2.MachineImage.genericLinux({
-        'eu-west-2': 'ami-0f6c1e6745ea9532f'
+        'eu-west-2': 'ami-06a81b1a87a3a242d'
       }),
       vpc,
       vpcSubnets: {
