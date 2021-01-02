@@ -14,33 +14,18 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
 
 
         const defaultCachePolicy = new cloudfront.CachePolicy(this, 'Default Cache Policy', {
-            cachePolicyName: 'Load Balancer',
+            cachePolicyName: 'loadBalancer',
             comment: 'Cache policy for the load balancer (efs)',
-            headerBehavior: {
-                behavior: 'allow list',
-                headers: ['Host', 'Origin']
-            },
-            cookieBehavior: {
-                behavior: 'allow list',
-                cookies: ['comment_author_*', 'comment_author_email_*', 'comment_author_url_*', 'wordpress_*', 'wordpress_logged_in_*', 'wordpress_test_cookie', 'wp-settings-*'],
-            },
-            queryStringBehavior: {
-                behavior: 'allow all'
-            }
+            headerBehavior: cloudfront.CacheHeaderBehavior.allowList('Host', 'Origin'),
+            cookieBehavior: cloudfront.CacheCookieBehavior.allowList('comment_author_*', 'comment_author_email_*', 'comment_author_url_*', 'wordpress_*', 'wordpress_logged_in_*', 'wordpress_test_cookie', 'wp-settings-*'),
+            queryStringBehavior: cloudfront.CacheQueryStringBehavior.all()
         });
 
         const s3Policy = new cloudfront.CachePolicy(this, 'S3 Cache policy', {
-            cachePolicyName: 'S3 Policy',
-            headerBehavior: {
-                behavior: 'allow list',
-                headers: ['Origin', 'Access-Control-Request-Headers', 'Access-Control-Request-Method']
-            },
-            cookieBehavior: {
-                behavior: 'none'
-            },
-            queryStringBehavior: {
-                behavior: 'none'
-            }
+            cachePolicyName: 's3',
+            headerBehavior: cloudfront.CacheHeaderBehavior.allowList('Origin', 'Access-Control-Request-Headers', 'Access-Control-Request-Method'),
+            cookieBehavior: cloudfront.CacheCookieBehavior.none(),
+            queryStringBehavior: cloudfront.CacheQueryStringBehavior.none()
         });
 
         const defaultBehavior: cloudfront.BehaviorOptions = {
@@ -72,8 +57,8 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
         const cf = new cloudfront.Distribution(this, 'Load balancer distribution', {
             defaultBehavior: defaultBehavior,
             additionalBehaviors: {
-                'wpincludes': wpincludes,
-                'wpcontent': wpContent
+                '/wp-inclues/*': wpincludes,
+                '/wp-content/*': wpContent
             },
             domainNames: ['www.rebudd.com', 'rebudd.com'],
             certificate: myCertificate
