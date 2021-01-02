@@ -12,13 +12,30 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
             (this, 'Rebudd Certificate', 'arn:aws:acm:us-east-1:460234074473:certificate/43468197-89a2-4d04-8b1a-336f09bd5c0b');
 
 
+        const defaultCachePolicy = new cloudfront.CachePolicy(this, 'Default Cache Policy', {
+            cachePolicyName: 'Load Balancer',
+            comment: 'Cache policy for the load balancer (efs)',
+            headerBehavior: {
+                behavior: 'allow list',
+                headers: ['Host', 'Origin']
+            },
+            cookieBehavior: {
+                behavior: 'allow list',
+                cookies: ['comment_author_*', 'comment_author_email_*', 'comment_author_url_*', 'wordpress_*', 'wordpress_logged_in_*', 'wordpress_test_cookie', 'wp-settings-*'],
+            },
+            queryStringBehavior: {
+                behavior: 'allow all'
+            }
+        });
+
         const defaultBehavior: cloudfront.BehaviorOptions = {
             origin: new origins.LoadBalancerV2Origin(lb as any, {
-                protocolPolicy: cloudfront.OriginProtocolPolicy.HTTP_ONLY
+                protocolPolicy: cloudfront.OriginProtocolPolicy.HTTPS_ONLY
             }),
             allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
             viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
             cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
+            cachePolicy: defaultCachePolicy
         }
 
         //  Add the load balancer as the origin
