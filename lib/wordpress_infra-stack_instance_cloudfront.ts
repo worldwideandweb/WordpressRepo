@@ -58,7 +58,8 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
 
         const wpincludes: cloudfront.BehaviorOptions = {
             origin: new origins.S3Origin(s3 as any),
-            allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+            allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
+            viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
             cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
             cachePolicy: s3Policy   
         }
@@ -66,7 +67,8 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
 
         const wpContent: cloudfront.BehaviorOptions = {
             origin: new origins.S3Origin(s3 as any),
-            allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+            allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
+            viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
             cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
             cachePolicy: s3Policy   
         }
@@ -75,7 +77,7 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
         const cf = new cloudfront.Distribution(this, 'Load balancer distribution', {
             defaultBehavior: defaultBehavior,
             additionalBehaviors: {
-                '/wp-inclues/*': wpincludes,
+                '/wp-includes/*': wpincludes,
                 '/wp-content/*': wpContent,
                 '/wp-login.php': defaultBehavior,
                 '/wp-admin/*': defaultBehavior,
