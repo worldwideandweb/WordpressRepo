@@ -77,8 +77,6 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
         const cf = new cloudfront.Distribution(this, 'Load balancer distribution', {
             defaultBehavior: defaultBehavior,
             additionalBehaviors: {
-                '/wp-includes/*': wpincludes,
-                '/wp-content/*': wpContent,
                 '/wp-login.php': defaultBehavior,
                 '/wp-admin/*': defaultBehavior,
                 '/wp-json/*': allBehaviour,
