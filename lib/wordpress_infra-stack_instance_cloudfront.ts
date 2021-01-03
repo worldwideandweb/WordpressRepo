@@ -10,7 +10,7 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
         super(scope, id, props);
 
         const myCertificate = certificateManager.Certificate.fromCertificateArn
-            (this, 'Rebudd Certificate', 'arn:aws:acm:us-east-1:460234074473:certificate/43468197-89a2-4d04-8b1a-336f09bd5c0b');
+            (this, 'Rebudd Certificate', 'arn:aws:acm:us-east-1:460234074473:certificate/91c6eb62-2649-497b-943b-738a89fb0570');
 
 
         const defaultCachePolicy = new cloudfront.CachePolicy(this, 'Default Cache Policy', {
@@ -58,7 +58,7 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
 
         const wpincludes: cloudfront.BehaviorOptions = {
             origin: new origins.S3Origin(s3 as any),
-            allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
+            allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
             viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
             cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
             cachePolicy: s3Policy   
@@ -67,7 +67,7 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
 
         const wpContent: cloudfront.BehaviorOptions = {
             origin: new origins.S3Origin(s3 as any),
-            allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
+            allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
             viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
             cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
             cachePolicy: s3Policy   
@@ -83,7 +83,7 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
                 '/wp-admin/*': defaultBehavior,
                 '/wp-json/*': allBehaviour,
             },
-            domainNames: ['www.rebudd.com', 'rebudd.com'],
+            domainNames: ['www.rebudd.com', 'rebudd.com', 'dorna.rebudd.com', 'worldwideandweb.rebudd.com'],
             certificate: myCertificate
         });
     }

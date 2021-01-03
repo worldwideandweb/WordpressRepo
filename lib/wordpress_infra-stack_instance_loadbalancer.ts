@@ -23,7 +23,7 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
 
     const listener = this.lb.addListener('Listener 443', {
       port: 443,
-      certificates: [elbv2.ListenerCertificate.fromArn('arn:aws:acm:eu-west-2:460234074473:certificate/5576f782-35aa-43ab-8e65-892a90b53d74')]
+      certificates: [elbv2.ListenerCertificate.fromArn('arn:aws:acm:eu-west-2:460234074473:certificate/038d08bc-8641-4b2b-ad2d-020b9f17d420')]
     });
 
     this.asg = new AutoScalingGroup(this, 'Wordpress Autoscaling Group', {
