@@ -17,7 +17,7 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
             cachePolicyName: 'loadBalancer',
             comment: 'Cache policy for the load balancer (efs)',
             headerBehavior: cloudfront.CacheHeaderBehavior.allowList('Host', 'Origin', 'Access-Control-Request-Headers', 'Access-Control-Request-Method', 'Authorization', 'CloudFront-Forwarded-Proto'),
-            cookieBehavior: cloudfront.CacheCookieBehavior.allowList('comment_author_*', 'comment_author_email_*', 'comment_author_url_*', 'wordpress_*', 'wordpress_logged_in_*', 'wordpress_test_cookie', 'wp-settings-*'),
+            cookieBehavior: cloudfront.CacheCookieBehavior.all(),
             queryStringBehavior: cloudfront.CacheQueryStringBehavior.all()
         });
 
@@ -76,11 +76,6 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
         //  Add the load balancer as the origin
         const cf = new cloudfront.Distribution(this, 'Load balancer distribution', {
             defaultBehavior: defaultBehavior,
-            additionalBehaviors: {
-                '/wp-login.php': defaultBehavior,
-                '/wp-admin/*': defaultBehavior,
-                '/wp-json/*': allBehaviour,
-            },
             domainNames: ['www.rebudd.com', 'rebudd.com', 'dorna.rebudd.com', 'worldwideandweb.rebudd.com'],
             certificate: myCertificate
         });
