@@ -10,7 +10,7 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
         super(scope, id, props);
 
         const myCertificate = certificateManager.Certificate.fromCertificateArn
-            (this, 'Rebudd Certificate', 'arn:aws:acm:us-east-1:460234074473:certificate/91c6eb62-2649-497b-943b-738a89fb0570');
+            (this, 'Website certificates', 'arn:aws:acm:us-east-1:460234074473:certificate/bb9f9289-08e9-4a30-ad21-bb4188db68c5');
 
 
         const defaultCachePolicy = new cloudfront.CachePolicy(this, 'Default Cache Policy', {
@@ -76,7 +76,7 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
         //  Add the load balancer as the origin
         const cf = new cloudfront.Distribution(this, 'Load balancer distribution', {
             defaultBehavior: defaultBehavior,
-            domainNames: ['www.rebudd.com', 'rebudd.com', 'dorna.rebudd.com', 'worldwideandweb.rebudd.com'],
+            domainNames: ['www.rebudd.com', 'rebudd.com', 'worldwideandweb.rebudd.com', 'dev.sahamidiamonds.co.uk'],
             certificate: myCertificate
         });
     }
