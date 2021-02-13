@@ -76,7 +76,7 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
         //  Add the load balancer as the origin
         const cf = new cloudfront.Distribution(this, 'Load balancer distribution', {
             defaultBehavior: defaultBehavior,
-            domainNames: ['www.rebudd.com', 'rebudd.com', 'worldwideandweb.rebudd.com', 'dev.sahamidiamonds.co.uk'],
+            domainNames: ['dev.sahamidiamonds.co.uk'],
             certificate: myCertificate
         });
     }
