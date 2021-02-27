@@ -18,7 +18,7 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
     const myCertificate = certificateManager.Certificate.fromCertificateArn(
       this,
       'Website certificates',
-      'arn:aws:acm:us-east-1:460234074473:certificate/8240e213-1d02-4742-9ade-986c9358859a'
+      'arn:aws:acm:us-east-1:460234074473:certificate/2eaade1c-9417-4df9-a19c-6b4c02392bd5'
     );
 
     const defaultCachePolicy = new cloudfront.CachePolicy(
@@ -119,8 +119,6 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
         'dev.sahamidiamonds.co.uk',
         'www.worldwideandweb.com',
         'worldwideandweb.com',
-        'www.worldwideandweb.co.uk',
-        'worldwideandweb.co.uk',
       ],
       certificate: myCertificate,
     });

@@ -37,7 +37,7 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
           'arn:aws:acm:eu-west-2:460234074473:certificate/c6b0bee3-0103-4b69-824e-322b43d708ff'
         ),
         elbv2.ListenerCertificate.fromArn(
-          'arn:aws:acm:eu-west-2:460234074473:certificate/e78455fc-e4bc-40b0-8326-b03fab550a74',
+          'arn:aws:acm:eu-west-2:460234074473:certificate/54dbe60a-cd6b-404c-85e4-9098e26ec663',
         )
       ],
     });
