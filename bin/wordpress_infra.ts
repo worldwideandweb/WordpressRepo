@@ -19,7 +19,7 @@ const app = new cdk.App();
 const vpcStack = new WordpressInfraStack(app, 'WordpressInfraStack', { env });
 const certificates = new WordpressInfraStackCertificateManager(app, 'WordPressInfraStackCertificateManager', { env })
 new WordpressInfraStackFileSystem(app, 'WordpressInfraStackFileSystem', vpcStack.vpc, { env });
-const loadBalancerStack = new WordpressInfraStackLoadBalancer(app, 'WordpressInfraStackLoadBalancer', vpcStack.vpc, 
+const loadBalancerStack = new WordpressInfraStackLoadBalancer(app, 'WordpressInfraStackLoadBalancer', vpcStack.vpc,
     certificates.lavinFoodsLoadBalancerCertificate, { env });
 new WordpressInfraStackDatabase(app, 'WordpressInfraStackDatabase', vpcStack.vpc, loadBalancerStack.asg, loadBalancerStack.instance, { env });
 const bucket = new WordpressInfraStackS3(app, 'WordpressInfraStackS3', { env });

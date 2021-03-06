@@ -1,6 +1,7 @@
 import * as cdk from '@aws-cdk/core';
 import * as ec2 from '@aws-cdk/aws-ec2';
 import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
+import * as acm from '@aws-cdk/aws-certificatemanager';
 import { AutoScalingGroup } from '@aws-cdk/aws-autoscaling';
 
 export class WordpressInfraStackLoadBalancer extends cdk.Stack {
@@ -11,7 +12,7 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
     scope: cdk.Construct,
     id: string,
     vpc: ec2.Vpc,
-    lavinFoodCertificate,
+    lavinFoodCertificate: acm.Certificate,
     props?: cdk.StackProps
   ) {
     super(scope, id, props);
@@ -37,7 +38,7 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
         elbv2.ListenerCertificate.fromArn(
           'arn:aws:acm:eu-west-2:460234074473:certificate/f502af76-434b-42dd-9155-a408026f5b38'
         ),
-        elbv2.ListenerCertificate.fromCertificateManager(lavinFoodCertificate),
+        elbv2.ListenerCertificate.fromCertificateManager(lavinFoodCertificate as any),
       ],
     });
 
