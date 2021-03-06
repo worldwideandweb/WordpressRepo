@@ -6,6 +6,8 @@ import { WordpressInfraStackLoadBalancer } from '../lib/wordpress_infra-stack_in
 import { WordpressInfraStackFileSystem } from '../lib/wordpress_infra-stack_instance_filesystem';
 import { WordpressInfraStackS3 } from '../lib/wordpress_infra-stack_instance_s3';
 import { WordpressInfraStackCloudfront } from '../lib/wordpress_infra-stack_instance_cloudfront';
+import { WordpressInfraStackCertificateManager } from '../lib/wordpress_infra-stack_instance_certificatemanager';
+import { Certificate } from 'crypto';
 
 const env = {
     account: process.env.CDK_DEFAULT_ACCOUNT,
@@ -15,8 +17,13 @@ const env = {
 const app = new cdk.App();
 
 const vpcStack = new WordpressInfraStack(app, 'WordpressInfraStack', { env });
+const certificates = new WordpressInfraStackCertificateManager(app, 'WordPressInfraStackCertificateManager', { env })
 new WordpressInfraStackFileSystem(app, 'WordpressInfraStackFileSystem', vpcStack.vpc, { env });
-const loadBalancerStack = new WordpressInfraStackLoadBalancer(app, 'WordpressInfraStackLoadBalancer', vpcStack.vpc, { env });
+const loadBalancerStack = new WordpressInfraStackLoadBalancer(app, 'WordpressInfraStackLoadBalancer', vpcStack.vpc, 
+    certificates.lavinFoodsLoadBalancerCertificate, { env });
 new WordpressInfraStackDatabase(app, 'WordpressInfraStackDatabase', vpcStack.vpc, loadBalancerStack.asg, loadBalancerStack.instance, { env });
 const bucket = new WordpressInfraStackS3(app, 'WordpressInfraStackS3', { env });
-new WordpressInfraStackCloudfront(app, 'WordpressInfraStackCloudfront', bucket.bucket, loadBalancerStack.lb, {env})
+new WordpressInfraStackCloudfront(app, 'WordpressInfraStackCloudfront', bucket.bucket,
+    loadBalancerStack.lb,
+    certificates.lavinFoodsCloudFrontCertificate, { env }
+)

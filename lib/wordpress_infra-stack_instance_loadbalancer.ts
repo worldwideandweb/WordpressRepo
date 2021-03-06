@@ -11,6 +11,7 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
     scope: cdk.Construct,
     id: string,
     vpc: ec2.Vpc,
+    lavinFoodCertificate,
     props?: cdk.StackProps
   ) {
     super(scope, id, props);
@@ -34,14 +35,9 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
       port: 443,
       certificates: [
         elbv2.ListenerCertificate.fromArn(
-          'arn:aws:acm:eu-west-2:460234074473:certificate/c6b0bee3-0103-4b69-824e-322b43d708ff'
+          'arn:aws:acm:eu-west-2:460234074473:certificate/f502af76-434b-42dd-9155-a408026f5b38'
         ),
-        elbv2.ListenerCertificate.fromArn(
-          'arn:aws:acm:eu-west-2:460234074473:certificate/54dbe60a-cd6b-404c-85e4-9098e26ec663',
-        ),
-        elbv2.ListenerCertificate.fromArn(
-          'arn:aws:acm:eu-west-2:460234074473:certificate/d38b5358-3200-4325-b4eb-89be1f066e85'
-        )
+        elbv2.ListenerCertificate.fromCertificateManager(lavinFoodCertificate),
       ],
     });
 
