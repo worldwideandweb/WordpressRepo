@@ -11,7 +11,6 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
     id: string,
     s3: s3.Bucket,
     lb: elbv2.ApplicationLoadBalancer,
-    lavinFoodsCloudFrontCertificate: acm.Certificate,
     props?: cdk.StackProps
   ) {
     super(scope, id, props);
@@ -19,7 +18,7 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
     const myCertificate = acm.Certificate.fromCertificateArn(
       this,
       'Website certificates',
-      'arn:aws:acm:us-east-1:460234074473:certificate/e4c79ebb-7511-4b36-9022-7c60c02db737'
+      'arn:aws:acm:us-east-1:460234074473:certificate/c011bdc7-30f1-4aa9-83f2-c16a3214f500'
     );
 
     const defaultCachePolicy = new cloudfront.CachePolicy(
@@ -52,7 +51,7 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
     };
 
     //  Add the load balancer as the origin
-    const cf = new cloudfront.Distribution(this, 'Load balancer distribution', {
+    const cf = new cloudfront.Distribution(this, 'CloudFrontDistribution', {
       defaultBehavior: defaultBehavior,
       domainNames: [
         'dev.sahamidiamonds.co.uk',
@@ -62,16 +61,5 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
       ],
       certificate: myCertificate as any,
     });
-
-      //  Add the load balancer as the origin
-      const loadBalancerCFDistribution = new cloudfront.Distribution(this, 'Load balancer distribution', {
-        defaultBehavior: defaultBehavior,
-        domainNames: [
-          'dev.lavinfoods.com',
-          'lavinfoods.com',
-          'www.lavinfoods.com',
-        ],
-        certificate: lavinFoodsCloudFrontCertificate as any,
-      });
   }
 }
