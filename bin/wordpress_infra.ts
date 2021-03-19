@@ -9,7 +9,7 @@ import { WordpressInfraStackCloudfront } from '../lib/wordpress_infra-stack_inst
 
 const env = {
     account: process.env.CDK_DEFAULT_ACCOUNT,
-    region: 'eu-west-2'
+    region: 'eu-west-1'
 };
 
 const app = new cdk.App();
