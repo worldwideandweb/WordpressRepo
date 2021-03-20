@@ -9,7 +9,6 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
   constructor(
     scope: cdk.Construct,
     id: string,
-    s3: s3.Bucket,
     lb: elbv2.ApplicationLoadBalancer,
     props?: cdk.StackProps
   ) {

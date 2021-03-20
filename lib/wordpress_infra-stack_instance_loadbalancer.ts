@@ -23,32 +23,17 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
         vpc,
         internetFacing: true,
         vpcSubnets: {
-          availabilityZones: ['eu-west-2a', 'eu-west-2b'],
+          availabilityZones: ['eu-west-1a', 'eu-west-1b'],
           onePerAz: true,
           subnetType: ec2.SubnetType.PUBLIC,
         },
       }
     );
 
-    const listener = this.lb.addListener('Listener 443', {
-      port: 443,
-      certificates: [
-        elbv2.ListenerCertificate.fromArn(
-          'arn:aws:acm:eu-west-2:460234074473:certificate/c6b0bee3-0103-4b69-824e-322b43d708ff'
-        ),
-        elbv2.ListenerCertificate.fromArn(
-          'arn:aws:acm:eu-west-2:460234074473:certificate/54dbe60a-cd6b-404c-85e4-9098e26ec663',
-        ),
-        elbv2.ListenerCertificate.fromArn(
-          'arn:aws:acm:eu-west-2:460234074473:certificate/d38b5358-3200-4325-b4eb-89be1f066e85'
-        )
-      ],
-    });
-
     this.asg = new AutoScalingGroup(this, 'Wordpress Autoscaling Group', {
       instanceType: new ec2.InstanceType('t2.micro'),
       machineImage: ec2.MachineImage.genericLinux({
-        'eu-west-2': 'ami-04b145e4dde770569',
+        'eu-west-1': 'ami-04b145e4dde770569',
       }),
       vpc,
       vpcSubnets: {
@@ -72,11 +57,6 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
       ec2.Port.allTraffic(),
       'Load Balancer Port 2'
     );
-
-    listener.addTargets('Listener target', {
-      port: 80,
-      targets: [this.asg],
-    });
 
     this.asg.userData.addCommands(
       'apt-get -y update',
