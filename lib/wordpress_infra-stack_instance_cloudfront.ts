@@ -4,12 +4,14 @@ import * as cloudfront from '@aws-cdk/aws-cloudfront';
 import * as origins from '@aws-cdk/aws-cloudfront-origins';
 import * as certificateManager from '@aws-cdk/aws-certificatemanager';
 import * as s3 from '@aws-cdk/aws-s3';
+import { Certificate } from '@aws-cdk/aws-certificatemanager';
 
 export class WordpressInfraStackCloudfront extends cdk.Stack {
   constructor(
     scope: cdk.Construct,
     id: string,
     lb: elbv2.ApplicationLoadBalancer,
+    certificate: Certificate,
     props?: cdk.StackProps
   ) {
     super(scope, id, props);
@@ -17,62 +19,7 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
     const myCertificate = certificateManager.Certificate.fromCertificateArn(
       this,
       'Website certificates',
-      'arn:aws:acm:us-east-1:460234074473:certificate/e4c79ebb-7511-4b36-9022-7c60c02db737'
-    );
-
-    const defaultCachePolicy = new cloudfront.CachePolicy(
-      this,
-      'Default Cache Policy',
-      {
-        cachePolicyName: 'loadBalancer',
-        comment: 'Cache policy for the load balancer (efs)',
-        headerBehavior: cloudfront.CacheHeaderBehavior.allowList(
-          'Host',
-          'Origin',
-          'Access-Control-Request-Headers',
-          'Access-Control-Request-Method',
-          'Authorization',
-          'CloudFront-Forwarded-Proto'
-        ),
-        cookieBehavior: cloudfront.CacheCookieBehavior.all(),
-        queryStringBehavior: cloudfront.CacheQueryStringBehavior.all(),
-      }
-    );
-
-    const s3Policy = new cloudfront.CachePolicy(this, 'S3 Cache policy', {
-      cachePolicyName: 's3',
-      headerBehavior: cloudfront.CacheHeaderBehavior.allowList(
-        'Origin',
-        'Access-Control-Request-Headers',
-        'Access-Control-Request-Method',
-        'Authorization',
-        'CloudFront-Forwarded-Proto'
-      ),
-      cookieBehavior: cloudfront.CacheCookieBehavior.none(),
-      queryStringBehavior: cloudfront.CacheQueryStringBehavior.none(),
-    });
-
-    const allCachePolicy = new cloudfront.CachePolicy(
-      this,
-      'All Cache Policy',
-      {
-        cachePolicyName: 'wpJson',
-        comment: 'Cache policy for the load balancer (efs)',
-        headerBehavior: cloudfront.CacheHeaderBehavior.allowList(
-          'Host',
-          'Referer',
-          'Accept-Language',
-          'User-Agent',
-          'X-Wp-Nonce',
-          'Origin',
-          'Access-Control-Request-Headers',
-          'Access-Control-Request-Method',
-          'Authorization',
-          'CloudFront-Forwarded-Proto'
-        ),
-        cookieBehavior: cloudfront.CacheCookieBehavior.all(),
-        queryStringBehavior: cloudfront.CacheQueryStringBehavior.all(),
-      }
+      'arn:aws:acm:us-east-1:460234074473:certificate/d7b1ffde-be9d-4edc-971d-5a8a7ea0b05c'
     );
 
     const defaultBehavior: cloudfront.BehaviorOptions = {
@@ -82,43 +29,16 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
       allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
       viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
       cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
-      cachePolicy: defaultCachePolicy,
-    };
-
-    const allBehaviour: cloudfront.BehaviorOptions = {
-      origin: new origins.LoadBalancerV2Origin(lb as any, {
-        protocolPolicy: cloudfront.OriginProtocolPolicy.HTTPS_ONLY,
-      }),
-      allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
-      viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-      cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
-      cachePolicy: allCachePolicy,
-    };
-
-    const wpincludes: cloudfront.BehaviorOptions = {
-      origin: new origins.S3Origin(s3 as any),
-      allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-      viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-      cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
-      cachePolicy: s3Policy,
-    };
-
-    const wpContent: cloudfront.BehaviorOptions = {
-      origin: new origins.S3Origin(s3 as any),
-      allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-      viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-      cachedMethods: cloudfront.CachedMethods.CACHE_GET_HEAD_OPTIONS,
-      cachePolicy: s3Policy,
+      cachePolicy: cloudfront.CachePolicy.CACHING_DISABLED,
     };
 
     //  Add the load balancer as the origin
-    const cf = new cloudfront.Distribution(this, 'Load balancer distribution', {
+    const cf = new cloudfront.Distribution(this, 'irelandDistribution', {
       defaultBehavior: defaultBehavior,
       domainNames: [
-        'dev.sahamidiamonds.co.uk',
-        'www.worldwideandweb.com',
-        'worldwideandweb.com',
-        'dev.lilyofthenile.co.uk',
+        'ireland.worldwideandweb.com',
+        'ireland.worldwideandweb.com',
+        'ireland.lilyofthenile.co.uk',
       ],
       certificate: myCertificate,
     });
