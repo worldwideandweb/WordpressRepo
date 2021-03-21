@@ -18,7 +18,7 @@ export class WordpressInfraStack extends cdk.Stack {
       {
         cidrMask: 28,
         name: 'Auto Scaling Group',
-        subnetType: ec2.SubnetType.PRIVATE,
+        subnetType: ec2.SubnetType.ISOLATED,
       },
       {
         cidrMask: 28,

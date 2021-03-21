@@ -36,9 +36,10 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
     const cf = new cloudfront.Distribution(this, 'irelandDistribution', {
       defaultBehavior: defaultBehavior,
       domainNames: [
-        'ireland.worldwideandweb.com',
-        'ireland.worldwideandweb.com',
-        'ireland.lilyofthenile.co.uk',
+        'worldwideandweb.com',
+        'www.worldwideandweb.com',
+        'vintagegrooming.co.uk',
+        'www.vintagegrooming.co.uk',
       ],
       certificate: myCertificate,
     });

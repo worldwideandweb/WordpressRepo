@@ -42,7 +42,7 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
     this.asg = new AutoScalingGroup(this, 'Wordpress Autoscaling Group', {
       instanceType: new ec2.InstanceType('t2.micro'),
       machineImage: ec2.MachineImage.genericLinux({
-        'eu-west-1': 'ami-07012d9bd46113bc7',
+        'eu-west-1': 'ami-0bc88139f11a79918',
       }),
       vpc,
       vpcSubnets: {
@@ -81,7 +81,7 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
       'efs_mount_point_1=/mnt/efs/fs1',
       'mkdir -p "${efs_mount_point_1}"',
       'test -f "/sbin/mount.efs" && echo "${file_system_id_1}:/ ${efs_mount_point_1} efs defaults,_netdev" >> /etc/fstab || ' +
-        'echo "${file_system_id_1}.efs.eu-west-2.amazonaws.com:/ ${efs_mount_point_1} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport,_netdev 0 0" >> /etc/fstab',
+        'echo "${file_system_id_1}.efs.eu-west-1.amazonaws.com:/ ${efs_mount_point_1} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport,_netdev 0 0" >> /etc/fstab',
       'mount -a -t efs,nfs4 defaults'
     );
   }
