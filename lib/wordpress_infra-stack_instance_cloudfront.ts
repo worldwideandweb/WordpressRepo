@@ -5,6 +5,7 @@ import * as origins from '@aws-cdk/aws-cloudfront-origins';
 import * as certificateManager from '@aws-cdk/aws-certificatemanager';
 import * as s3 from '@aws-cdk/aws-s3';
 import { Certificate } from '@aws-cdk/aws-certificatemanager';
+import { Duration } from '@aws-cdk/core';
 
 export class WordpressInfraStackCloudfront extends cdk.Stack {
   constructor(
@@ -25,6 +26,13 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
     const defaultBehavior: cloudfront.BehaviorOptions = {
       origin: new origins.LoadBalancerV2Origin(lb as any, {
         protocolPolicy: cloudfront.OriginProtocolPolicy.HTTPS_ONLY,
+        connectionAttempts: 3,
+        //@ts-ignore
+        connectionTimeout: Duration.seconds(10),
+        //@ts-ignore
+        keepaliveTimeout: Duration.seconds(60),
+        //@ts-ignore
+        readTimeout: Duration.seconds(60),
       }),
       allowedMethods: cloudfront.AllowedMethods.ALLOW_ALL,
       viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,

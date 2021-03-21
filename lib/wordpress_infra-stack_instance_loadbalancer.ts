@@ -3,6 +3,7 @@ import * as ec2 from '@aws-cdk/aws-ec2';
 import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 import { AutoScalingGroup } from '@aws-cdk/aws-autoscaling';
 import { Certificate } from '@aws-cdk/aws-certificatemanager';
+import { Duration } from '@aws-cdk/core';
 
 export class WordpressInfraStackLoadBalancer extends cdk.Stack {
   public asg: AutoScalingGroup;
@@ -28,7 +29,9 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
           onePerAz: true,
           subnetType: ec2.SubnetType.PUBLIC,
         },
-      }
+        //@ts-ignore
+        idleTimeout: Duration.minutes(2),
+      },
     );
 
     const listener = this.lb.addListener('Listener 443', {
@@ -41,7 +44,7 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
     this.asg = new AutoScalingGroup(this, 'Wordpress Autoscaling Group', {
       instanceType: new ec2.InstanceType('t2.micro'),
       machineImage: ec2.MachineImage.genericLinux({
-        'eu-west-1': 'ami-0bc88139f11a79918',
+        'eu-west-1': 'ami-0ba2015ef70ce316e',
       }),
       vpc,
       vpcSubnets: {

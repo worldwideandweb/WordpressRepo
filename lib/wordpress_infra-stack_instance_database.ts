@@ -21,7 +21,7 @@ export class WordpressInfraStackDatabase extends cdk.Stack {
         subnetType: ec2.SubnetType.ISOLATED
       },
       vpc,
-      securityGroups: [securityGroup]
+      securityGroups: [securityGroup],
     });
   }
 }

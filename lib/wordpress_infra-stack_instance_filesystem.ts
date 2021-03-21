@@ -16,6 +16,7 @@ export class WordpressInfraStackFileSystem extends cdk.Stack {
       lifecyclePolicy: efs.LifecyclePolicy.AFTER_14_DAYS,
       performanceMode: efs.PerformanceMode.GENERAL_PURPOSE,
       removalPolicy: RemovalPolicy.DESTROY,
+      enableAutomaticBackups: true,
     });
   }
 }
