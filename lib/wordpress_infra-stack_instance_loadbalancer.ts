@@ -44,7 +44,7 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
     this.asg = new AutoScalingGroup(this, 'Wordpress Autoscaling Group', {
       instanceType: new ec2.InstanceType('t2.micro'),
       machineImage: ec2.MachineImage.genericLinux({
-        'eu-west-1': 'ami-0ba2015ef70ce316e',
+        'eu-west-1': 'ami-084622a143b738f0b',
       }),
       vpc,
       vpcSubnets: {

@@ -32,6 +32,11 @@ export class WordpressInfraStackCertificateManager extends cdk.Stack {
       'VintageGrooming',
       'Z00165253W1BNHOFJLQ54'
     );
+    const helpmycaseHz = route53.HostedZone.fromHostedZoneId(
+      this,
+      'HelpMyCase',
+      'Z1018955P0A0ARLVX9SO'
+    );
 
     this.certificate = new acm.Certificate(this, 'Certificate', {
       domainName: 'worldwideandweb.com',
@@ -43,6 +48,8 @@ export class WordpressInfraStackCertificateManager extends cdk.Stack {
         '*.lilyofthenile.co.uk',
         'vintagegrooming.co.uk',
         '*.vintagegrooming.co.uk',
+        'helpmycase.co.uk',
+        '*.helpmycase.co.uk',
       ],
       validation: acm.CertificateValidation.fromDnsMultiZone({
         '*.worldwideandweb.com': worldwideandwebHz,
@@ -52,6 +59,8 @@ export class WordpressInfraStackCertificateManager extends cdk.Stack {
         '*.lilyofthenile.co.uk': lilyofthenileHz,
         'vintagegrooming.co.uk': vintageGroomingHz,
         '*.vintagegrooming.co.uk': vintageGroomingHz,
+        'helpmycase.co.uk': helpmycaseHz,
+        '*.helpmycase.co.uk': helpmycaseHz,
       }),
     });
   }

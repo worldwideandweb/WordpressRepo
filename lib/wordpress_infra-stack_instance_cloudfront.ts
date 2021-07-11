@@ -3,7 +3,6 @@ import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
 import * as cloudfront from '@aws-cdk/aws-cloudfront';
 import * as origins from '@aws-cdk/aws-cloudfront-origins';
 import * as certificateManager from '@aws-cdk/aws-certificatemanager';
-import * as s3 from '@aws-cdk/aws-s3';
 import { Certificate } from '@aws-cdk/aws-certificatemanager';
 import { Duration } from '@aws-cdk/core';
 
@@ -20,7 +19,7 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
     const myCertificate = certificateManager.Certificate.fromCertificateArn(
       this,
       'Website certificates',
-      'arn:aws:acm:us-east-1:460234074473:certificate/d7b1ffde-be9d-4edc-971d-5a8a7ea0b05c'
+      'arn:aws:acm:us-east-1:460234074473:certificate/44d9ba15-0446-4cb7-882a-3b261a9133a0'
     );
 
     const defaultBehavior: cloudfront.BehaviorOptions = {
@@ -48,6 +47,8 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
         'www.worldwideandweb.com',
         'vintagegrooming.co.uk',
         'www.vintagegrooming.co.uk',
+        'helpmycase.co.uk',
+        'www.helpmycase.co.uk',
       ],
       certificate: myCertificate,
     });
