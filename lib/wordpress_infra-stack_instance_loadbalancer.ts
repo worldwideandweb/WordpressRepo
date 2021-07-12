@@ -37,14 +37,14 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
     const listener = this.lb.addListener('Listener 443', {
       port: 443,
       certificates: [
-        elbv2.ListenerCertificate.fromArn(certificate.certificateArn),
+        elbv2.ListenerCertificate.fromArn('arn:aws:acm:eu-west-1:460234074473:certificate/e425bca7-a5e5-48b7-8b5f-c8ed48356e45'),
       ],
     });
 
     this.asg = new AutoScalingGroup(this, 'Wordpress Autoscaling Group', {
       instanceType: new ec2.InstanceType('t2.micro'),
       machineImage: ec2.MachineImage.genericLinux({
-        'eu-west-1': 'ami-084622a143b738f0b',
+        'eu-west-1': 'ami-03c7ca8d73da5c5a5',
       }),
       vpc,
       vpcSubnets: {
@@ -88,3 +88,4 @@ export class WordpressInfraStackLoadBalancer extends cdk.Stack {
     );
   }
 }
+  

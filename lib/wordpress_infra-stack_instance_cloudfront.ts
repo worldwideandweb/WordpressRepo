@@ -19,7 +19,7 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
     const myCertificate = certificateManager.Certificate.fromCertificateArn(
       this,
       'Website certificates',
-      'arn:aws:acm:us-east-1:460234074473:certificate/44d9ba15-0446-4cb7-882a-3b261a9133a0'
+      'arn:aws:acm:us-east-1:460234074473:certificate/49b1a8df-d319-48ad-8781-a9f7488ca221'
     );
 
     const defaultBehavior: cloudfront.BehaviorOptions = {
@@ -49,6 +49,8 @@ export class WordpressInfraStackCloudfront extends cdk.Stack {
         'www.vintagegrooming.co.uk',
         'helpmycase.co.uk',
         'www.helpmycase.co.uk',
+        'truemanbarbers.co.uk',
+        'www.truemanbarbers.co.uk',
       ],
       certificate: myCertificate,
     });

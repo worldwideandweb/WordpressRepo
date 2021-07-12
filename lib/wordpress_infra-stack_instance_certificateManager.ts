@@ -38,29 +38,31 @@ export class WordpressInfraStackCertificateManager extends cdk.Stack {
       'Z1018955P0A0ARLVX9SO'
     );
 
+    const truemanbarbersHz = route53.HostedZone.fromHostedZoneId(
+      this,
+      'TruemanBarbers',
+      'Z001721717RN5QLJLMRK0'
+    );
+
     this.certificate = new acm.Certificate(this, 'Certificate', {
       domainName: 'worldwideandweb.com',
       subjectAlternativeNames: [
         '*.worldwideandweb.com',
-        'lavinfoods.com',
-        '*.lavinfoods.com',
-        'lilyofthenile.co.uk',
-        '*.lilyofthenile.co.uk',
         'vintagegrooming.co.uk',
         '*.vintagegrooming.co.uk',
         'helpmycase.co.uk',
         '*.helpmycase.co.uk',
+        '*.truemanbarbers.co.uk',
+        'truemanbarbers.co.uk',
       ],
       validation: acm.CertificateValidation.fromDnsMultiZone({
         '*.worldwideandweb.com': worldwideandwebHz,
-        'lavinfoods.com': lavinFoodsHz,
-        '*.lavinfoods.com': lavinFoodsHz,
-        'lilyofthenile.co.uk': lilyofthenileHz,
-        '*.lilyofthenile.co.uk': lilyofthenileHz,
         'vintagegrooming.co.uk': vintageGroomingHz,
         '*.vintagegrooming.co.uk': vintageGroomingHz,
         'helpmycase.co.uk': helpmycaseHz,
         '*.helpmycase.co.uk': helpmycaseHz,
+        '*.truemanbarbers.co.uk': truemanbarbersHz,
+        'truemanbarbers.co.uk': truemanbarbersHz,
       }),
     });
   }
